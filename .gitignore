@@ -1,3 +1,8 @@
+.env.backend
+.env.frontend
+.env.db
+.docker
+
 # Logs
 logs
 *.log
