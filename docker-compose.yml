@@ -1,14 +1,29 @@
 version: "3.9"
 
 services:
+  nginx:
+    container_name: nginx
+    build: 
+      dockerfile: Dockerfile.NGINX
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/ssl:/etc/nginx/ssl:ro
+    networks:
+      - musicology
+    depends_on:
+      - frontend
+  
   mysql_db:
     container_name: musicology_db
     image: mysql:8
     env_file: .env.db
     restart: unless-stopped
-    # command: 
+    command: 
+      - --sql_mode=
     #   - --default-authentication-plugin=mysql_native_password
-    #   - --sql_mode=
     ports:
       - "3306:3306"
     volumes:
