@@ -18,12 +18,19 @@ services:
   
   mysql_db:
     container_name: musicology_db
-    image: mysql:8
+    build:
+      dockerfile: Dockerfile.MYSQL
+    # image: mysql:8
     env_file: .env.db
     restart: unless-stopped
     command: 
       - --sql_mode=
-    #   - --default-authentication-plugin=mysql_native_password
+      # - --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: '/usr/bin/mysql --user=${MYSQL_USER} --password=${MYSQL_ROOT_PASSWORD} --execute "SHOW DATABASES;"'
+      interval: 10s
+      timeout: 30s
+      retries: 15
     ports:
       - "3306:3306"
     volumes:
@@ -34,6 +41,9 @@ services:
   backend:
     container_name: musicology_api
     image: ${ECR_REGISTRY}/${ECR_BREPO_NAME}:${IMAGE_TAG}
+    # build: 
+    #   context: ../musicology-api.pro/
+    #   dockerfile: Dockerfile.BACKEND
     env_file: .env.backend
     restart: unless-stopped
     ports:
