@@ -3,6 +3,10 @@
 .env.db
 .docker
 
+init-scripts
+mysql
+Dockerfile.MYSQL
+
 # Logs
 logs
 *.log
