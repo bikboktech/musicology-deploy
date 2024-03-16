@@ -1,0 +1,3 @@
+https://musicology.pro {
+	reverse_proxy musicology_pro:3000
+}

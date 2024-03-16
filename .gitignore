@@ -3,6 +3,8 @@
 .env.db
 .docker
 
+docker-compose-local.yml
+
 init-scripts
 mysql
 Dockerfile.MYSQL
