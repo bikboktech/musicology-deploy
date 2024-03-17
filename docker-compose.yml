@@ -25,9 +25,14 @@ services:
       - 443:443
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./.docker/caddy/data:/data # Optional
+      - ./.docker/caddy/config:/config # Optional
     environment:
-      DOMAIN: "https://musicology.pro"
-      EMAIL: "andhrelja@hotmail.com"
+      - EMAIL=info@manuellupen.com
+    networks:
+      - musicology
+    depends_on:
+      - frontend
   
   mysql_db:
     container_name: musicology_db
