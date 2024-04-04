@@ -1,36 +1,36 @@
 services:
-  nginx:
-    container_name: nginx
-    image: nginx:1.25-alpine
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/ssl:/etc/nginx/ssl:ro
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - musicology
-    depends_on:
-      - frontend
-
-  # caddy:
-  #   image: caddy:2
-  #   container_name: caddy
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx:1.25-alpine
   #   restart: always
   #   ports:
-  #     - 80:80  # Needed for the ACME HTTP-01 challenge.
-  #     - 443:443
+  #     - "80:80"
+  #     - "443:443"
   #   volumes:
-  #     - ./Caddyfile:/etc/caddy/Caddyfile:ro
-  #     - ./.docker/caddy/data:/data # Optional
-  #     - ./.docker/caddy/config:/config # Optional
-  #   environment:
-  #     - EMAIL=info@manuellupen.com
+  #     - /etc/ssl:/etc/nginx/ssl:ro
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
   #   networks:
   #     - musicology
   #   depends_on:
   #     - frontend
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: always
+    ports:
+      - 80:80  # Needed for the ACME HTTP-01 challenge.
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./.docker/caddy/data:/data # Optional
+      - ./.docker/caddy/config:/config # Optional
+    environment:
+      - EMAIL=info@manuellupen.com
+    networks:
+      - musicology
+    depends_on:
+      - frontend
   
   # mysql_db:
   #   container_name: musicology_db
@@ -53,7 +53,7 @@ services:
   
   backend:
     container_name: musicology_api
-    image: ${ECR_REGISTRY}/${ECR_BREPO_NAME}:${IMAGE_TAG}
+    image: ${ECR_REGISTRY}/musicology-api.pro:${IMAGE_TAG}
     # build: 
     #   context: ../musicology-api.pro/
     #   dockerfile: Dockerfile.DEV
@@ -61,8 +61,7 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
-    volumes:
-      - ~/.aws/config:/root/.aws/config
+    # volumes:
     #   - ../musicology-api.pro:/usr/src/app
     # depends_on:
     #   - mysql_db
@@ -71,7 +70,7 @@ services:
   
   frontend:
     container_name: musicology_pro
-    image: ${ECR_REGISTRY}/${ECR_FREPO_NAME}:${IMAGE_TAG}
+    image: ${ECR_REGISTRY}/musicology.pro:${IMAGE_TAG}
     # build: 
     #   context: ../musicology.pro/
     #   dockerfile: Dockerfile.DEV
